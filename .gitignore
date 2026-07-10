@@ -16,7 +16,10 @@ __pycache__/
 .env
 .env.*
 *.env
-Database/USER.sql
+*.sql
+
+# Local database materials are kept on this machine only.
+Database/
 
 # Local database/runtime exports
 *.db
@@ -24,13 +27,6 @@ Database/USER.sql
 *.sqlite3
 *.bak
 *.tmp
-
-# Raw/sensitive XHS collection data
-Database/Datapool/data-collection/
-Database/Datapool/data-images/
-Database/Datapool/data-pool/xhs_sample_pool_v1.csv
-Database/Datapool/data-pool/*.xlsx
-Database/Datapool/features/*.csv
 
 # Third-party reference screenshots; keep analysis markdown, not copied visual assets.
 case-analysis/参考IP/**/*.png

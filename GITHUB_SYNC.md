@@ -8,16 +8,13 @@
 
 - `ContentPipeline/` 下的发布日历、候选选题、自动化脚本、每日生成 Markdown、待发布清单和蓝汐生成图。
 - `LanXi/` 下的蓝汐原创角色资产和角色档案。
-- `Database/` 下的脚本、SQL 初始化文件、查询文件、流程文档和脱敏模板。
 - `case-analysis/` 下的分析报告 Markdown。
 - `todolist.html` 等项目管理材料。
 
 默认忽略：
 
-- `Database/Datapool/data-collection/` 原始采集 JSON，里面有平台链接 token 和用户/评论上下文。
-- `Database/Datapool/data-images/` 下载的第三方样本图。
-- `Database/Datapool/data-pool/xhs_sample_pool_v1.csv` 和 `Database/Datapool/features/*.csv`，当前版本仍含平台链接 token。
-- `Database/USER.sql` 本地数据库用户密码文件；需要时从 `Database/USER.example.sql` 复制后本地修改。
+- `Database/` 全目录。数据库脚本、SQL、原始采集、样本池、特征 CSV、下载图和本地密码文件都只保留在本机。
+- `*.sql`。所有 SQL 文件默认不入库。
 - `case-analysis/参考IP/` 下的第三方截图。
 - `.vscode/`、缓存、临时目录和环境变量文件。
 
@@ -89,7 +86,7 @@ gh pr create --base main --head content/lanxi-d5 --title "content: add LanXi D5 
 
 ## 新账号数据更新后同步
 
-新采集或新账号数据先在本地完成清洗、标注、入库和策略更新。同步 GitHub 时优先提交流程性产物和脱敏后的策略结果，不直接提交原始采集文件。
+新采集或新账号数据先在本地完成清洗、标注、入库和策略更新。数据库相关材料不提交到 GitHub；只同步会影响内容生产的非数据库产物，例如 `ContentPipeline/` 的日历、候选选题、生成包、图片和待发布清单。
 
 建议检查：
 
@@ -99,4 +96,4 @@ git diff --stat
 rg -n -i "xsec[_-]?token|password|secret|api[_-]?key|bearer|authorization|cookie" . --glob "!GITHUB_SYNC.md"
 ```
 
-如果确实需要共享样本特征，先生成脱敏 CSV，再单独评估是否入库。
+如果确实需要共享样本特征，先生成脱敏摘要，并放在非 `Database/` 路径下单独评估是否入库。
