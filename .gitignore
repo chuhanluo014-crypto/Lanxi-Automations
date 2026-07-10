@@ -1,0 +1,42 @@
+# OS and editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.agents/
+
+# Python/cache artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local env and credentials
+.env
+.env.*
+*.env
+Database/USER.sql
+
+# Local database/runtime exports
+*.db
+*.sqlite
+*.sqlite3
+*.bak
+*.tmp
+
+# Raw/sensitive XHS collection data
+Database/Datapool/data-collection/
+Database/Datapool/data-images/
+Database/Datapool/data-pool/xhs_sample_pool_v1.csv
+Database/Datapool/data-pool/*.xlsx
+Database/Datapool/features/*.csv
+
+# Third-party reference screenshots; keep analysis markdown, not copied visual assets.
+case-analysis/参考IP/**/*.png
+case-analysis/参考IP/**/*.jpg
+case-analysis/参考IP/**/*.jpeg
+case-analysis/参考IP/**/*.webp
+
+# Temporary local probes
+ContentPipeline/generated/_probe_*/

@@ -1,0 +1,1312 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>小红书全新 IP 核心孵化 Todo</title>
+  <style>
+    :root {
+      --background: #f8fafc;
+      --foreground: #111827;
+      --muted: #64748b;
+      --muted-bg: #f1f5f9;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --primary: #111827;
+      --accent: #ef4444;
+      --accent-soft: #fef2f2;
+      --green: #16a34a;
+      --green-soft: #f0fdf4;
+      --blue: #2563eb;
+      --blue-soft: #eff6ff;
+      --amber: #d97706;
+      --amber-soft: #fffbeb;
+      --purple: #7c3aed;
+      --purple-soft: #f5f3ff;
+      --radius: 8px;
+      --shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--background);
+      color: var(--foreground);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+      line-height: 1.5;
+      letter-spacing: 0;
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+    }
+
+    button {
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--foreground);
+      border-radius: var(--radius);
+      height: 36px;
+      padding: 0 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+    }
+
+    button:hover { background: #f8fafc; }
+    button.primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+    button.danger { color: #991b1b; border-color: #fecaca; background: #fff; }
+    button.icon { width: 36px; padding: 0; justify-content: center; }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+    }
+
+    aside {
+      border-right: 1px solid var(--border);
+      background: #fff;
+      padding: 22px 18px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+    }
+
+    main {
+      min-width: 0;
+      padding: 24px;
+    }
+
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 22px;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius);
+      background: var(--primary);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      flex: none;
+    }
+
+    h1, h2, h3, p { margin: 0; }
+    h1 { font-size: 24px; line-height: 1.2; }
+    h2 { font-size: 18px; }
+    h3 { font-size: 15px; }
+    small, .muted { color: var(--muted); }
+
+    .nav {
+      display: grid;
+      gap: 6px;
+      margin: 16px 0 22px;
+    }
+
+    .nav button {
+      justify-content: flex-start;
+      width: 100%;
+      box-shadow: none;
+      background: transparent;
+      border-color: transparent;
+    }
+
+    .nav button.active {
+      background: var(--muted-bg);
+      border-color: var(--border);
+    }
+
+    .side-section {
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+      margin-top: 16px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .progress {
+      height: 9px;
+      background: var(--muted-bg);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress > span {
+      display: block;
+      height: 100%;
+      width: 0%;
+      background: var(--primary);
+      transition: width 180ms ease;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin: 18px 0;
+    }
+
+    .metric {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      box-shadow: var(--shadow);
+      min-height: 96px;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 26px;
+      line-height: 1.1;
+      margin-top: 12px;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) 150px 170px 150px auto;
+      gap: 10px;
+      margin: 18px 0;
+      align-items: center;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--foreground);
+      border-radius: var(--radius);
+      min-height: 36px;
+      padding: 8px 10px;
+      outline: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #94a3b8;
+      box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.2);
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
+
+    .tag-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      height: 24px;
+      border-radius: 999px;
+      padding: 0 9px;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: #334155;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .tag.red { background: var(--accent-soft); border-color: #fecaca; color: #991b1b; }
+    .tag.green { background: var(--green-soft); border-color: #bbf7d0; color: #166534; }
+    .tag.blue { background: var(--blue-soft); border-color: #bfdbfe; color: #1d4ed8; }
+    .tag.amber { background: var(--amber-soft); border-color: #fde68a; color: #92400e; }
+    .tag.purple { background: var(--purple-soft); border-color: #ddd6fe; color: #5b21b6; }
+
+    .task-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .task {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      display: grid;
+      grid-template-columns: 26px minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .task.done {
+      background: #f8fafc;
+    }
+
+    .task.done .task-title {
+      text-decoration: line-through;
+      color: var(--muted);
+    }
+
+    .check {
+      width: 20px;
+      height: 20px;
+      margin-top: 2px;
+      accent-color: var(--primary);
+    }
+
+    .task-title {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      overflow-wrap: anywhere;
+    }
+
+    .task-desc {
+      color: #475569;
+      font-size: 13px;
+      margin-bottom: 9px;
+    }
+
+    .task-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .task-fields {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .task-field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .task-field label {
+      color: #334155;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .task-field textarea {
+      resize: vertical;
+      min-height: 64px;
+    }
+
+    .embedded-content {
+      margin-top: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .embedded-block {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: #f8fafc;
+      padding: 12px;
+      display: grid;
+      gap: 7px;
+    }
+
+    .embedded-block h4 {
+      margin: 0;
+      font-size: 13px;
+    }
+
+    .embedded-block p,
+    .embedded-block li {
+      color: #475569;
+      font-size: 13px;
+    }
+
+    .embedded-block ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .task-actions {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .week-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .week-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+      min-height: 160px;
+    }
+
+    .week-card ul, .plain-list {
+      margin: 0;
+      padding-left: 18px;
+      color: #475569;
+      font-size: 13px;
+    }
+
+    .plain-list li { margin: 6px 0; }
+
+    .hidden { display: none !important; }
+
+    .empty {
+      border: 1px dashed #cbd5e1;
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+      color: var(--muted);
+      background: #fff;
+    }
+
+    .note-box {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .icon-svg {
+      width: 16px;
+      height: 16px;
+      flex: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    @media (max-width: 1120px) {
+      .app { grid-template-columns: 1fr; }
+      aside {
+        position: static;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+      .metric-grid, .week-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .toolbar { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 720px) {
+      main { padding: 16px; }
+      .metric-grid, .week-grid, .grid-2, .toolbar { grid-template-columns: 1fr; }
+      .task { grid-template-columns: 26px minmax(0, 1fr); }
+      .task-fields { grid-template-columns: 1fr; }
+      .task-actions { grid-column: 2; justify-content: flex-start; }
+      .panel-head { display: grid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <div class="brand">
+        <div class="brand-mark">IP</div>
+        <div>
+          <h1>小红书新 IP 孵化</h1>
+          <small>8 周执行看板</small>
+        </div>
+      </div>
+
+      <div class="nav" aria-label="页面导航">
+        <button class="active" data-view="tasks" title="任务清单">
+          <svg class="icon-svg" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          任务清单
+        </button>
+        <button data-view="roadmap" title="8 周路线">
+          <svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M3 12h18"/><path d="M3 18h18"/><path d="M8 6v12"/><path d="M16 6v12"/></svg>
+          8 周路线
+        </button>
+        <button data-view="analysis" title="需求分析">
+          <svg class="icon-svg" viewBox="0 0 24 24"><path d="M4 19.5V5a2 2 0 0 1 2-2h12"/><path d="M8 7h8"/><path d="M8 11h8"/><path d="M8 15h5"/><path d="M18 3v18"/></svg>
+          需求分析
+        </button>
+        <button data-view="risks" title="风险与待确认">
+          <svg class="icon-svg" viewBox="0 0 24 24"><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+          风险与待确认
+        </button>
+      </div>
+
+      <div class="side-section">
+        <h3>总进度</h3>
+        <div class="progress" aria-label="总进度"><span id="sideProgress"></span></div>
+        <small id="sideProgressText">0 / 0 已完成</small>
+      </div>
+
+      <div class="side-section">
+        <h3>执行口径</h3>
+        <p class="muted">目标不是一次性“生成内容”，而是建立可持续运营、能复盘迭代的小红书 IP 闭环。</p>
+      </div>
+
+      <div class="side-section">
+        <button id="exportBtn" title="导出当前完成状态">
+          <svg class="icon-svg" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+          导出状态
+        </button>
+        <button id="resetBtn" class="danger" title="清空浏览器保存的勾选状态">
+          <svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v5"/><path d="M14 11v5"/></svg>
+          重置勾选
+        </button>
+      </div>
+    </aside>
+
+    <main>
+      <section id="view-tasks">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>项目任务清单</h2>
+              <p class="muted">按 8 周推进：W1-W7 拉长并细化 IP 设计、样本体系、数据库、数据处理、特征融合、内容生成和评估；W8 压缩完成发布验证、增长复盘与商业判断。</p>
+            </div>
+            <div class="tag-row">
+              <span class="tag red">P0 先确认定位</span>
+              <span class="tag blue">小红书优先</span>
+              <span class="tag green">进度与交付物自动保存</span>
+            </div>
+          </div>
+          <div class="metric-grid">
+            <div class="metric"><small>总任务</small><strong id="totalTasks">0</strong></div>
+            <div class="metric"><small>已完成</small><strong id="doneTasks">0</strong></div>
+            <div class="metric"><small>本周焦点</small><strong id="currentFocus">W1</strong></div>
+            <div class="metric"><small>核心交付物</small><strong>32+</strong></div>
+          </div>
+        </div>
+
+        <div class="toolbar" aria-label="任务筛选工具栏">
+          <input id="searchInput" type="search" placeholder="搜索任务、交付物、模块" />
+          <select id="weekFilter" aria-label="按周筛选">
+            <option value="all">全部周次</option>
+          </select>
+          <select id="moduleFilter" aria-label="按模块筛选">
+            <option value="all">全部模块</option>
+          </select>
+          <select id="statusFilter" aria-label="按状态筛选">
+            <option value="all">全部状态</option>
+            <option value="todo">未完成</option>
+            <option value="done">已完成</option>
+          </select>
+          <button id="clearFilterBtn" title="清空筛选">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></svg>
+            清空
+          </button>
+        </div>
+
+        <div id="taskList" class="task-list"></div>
+        <div id="emptyState" class="empty hidden">没有匹配的任务。</div>
+      </section>
+
+      <section id="view-roadmap" class="hidden">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>8 周路线图</h2>
+              <p class="muted">前 7 周承担主要建设工作，把原 W1-W5 的任务拉长、细化、复杂化；W8 只保留精简后的发布、增长、复盘、商业验证和资产归档。</p>
+            </div>
+          </div>
+        </div>
+        <div id="weekGrid" class="week-grid"></div>
+      </section>
+
+      <section id="view-analysis" class="hidden">
+        <div class="grid-2">
+          <div class="panel">
+            <h2>需求摘要</h2>
+            <ul class="plain-list">
+              <li>业务目标：8 周内完成一个可持续运营的小红书 IP 项目，其中前 7 周完成 IP、数据、数据库、处理代码、生成评估等核心建设，W8 完成压缩验证与复盘。</li>
+              <li>核心用户：IP 主理人、内容运营、AIGC 内容生产、未来的多账号矩阵运营团队。</li>
+              <li>成功标准：IP 定位清晰，内容风格稳定，完成首批内容发布，建立数据复盘机制，沉淀爆款/失效经验。</li>
+              <li>范围约束：小红书优先；抖音、视频号可作为后续扩展，不在 8 周内做重度平台适配。</li>
+            </ul>
+          </div>
+          <div class="panel">
+            <h2>来自 PDF 的方法论</h2>
+            <ul class="plain-list">
+              <li>产品链路：IP 初始化、内容生产、内容确认、内容分发、效果监测、策略学习。</li>
+              <li>技术链路：数据采集、结构化处理、特征融合、内容生成、评估筛选、反馈回流。</li>
+              <li>关键控制点：人设一致性、表达自然度、合规风险、去重、多模态视觉统一。</li>
+              <li>运营原则：不是单条内容生成，而是长期人物记忆、故事线推进、传播目标协同。</li>
+            </ul>
+          </div>
+          <div class="panel">
+            <h2>项目架构草案</h2>
+            <ul class="plain-list">
+              <li>前台工作台：IP 档案、内容日历、候选选题、待确认内容、发布记录、复盘记录。</li>
+              <li>数据资产：对标账号样本、热门选题样本、历史发布内容、评论反馈、策略资产库。</li>
+              <li>生成链路：IP 设定输入、热点/样本参考、文案生成、配图提示词、人工确认、发布。</li>
+              <li>评估链路：人设一致性、平台适配、内容自然度、重复度、合规性、传播潜力评分。</li>
+            </ul>
+          </div>
+          <div class="panel">
+            <h2>验收指标</h2>
+            <ul class="plain-list">
+              <li>第 2 周：完成 IP 人设、故事线、栏目矩阵、对标账号库和样本标注规范；视觉规范并入蓝汐角色档案维护。</li>
+              <li>第 4 周：完成数据库表结构、字段字典、索引方案和本地/云端部署准备。</li>
+              <li>第 6 周：完成 IP 特征融合、特征化数据集、选题生成流程和发布前检查。</li>
+              <li>第 8 周：完成压缩后的发布验证、增长复盘、商业判断、资产归档和下一阶段计划。</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-risks" class="hidden">
+        <div class="grid-2">
+          <div class="panel">
+            <h2>P0 待确认</h2>
+            <ul class="plain-list">
+              <li>IP 赛道：知识、生活方式、虚拟角色、品牌、情感、萌宠、职场或其他。</li>
+              <li>目标受众：年龄、性别、城市层级、消费能力、关注痛点与内容偏好。</li>
+              <li>IP 形式：真人出镜、虚拟形象、品牌人格、图文号、视频号或混合形态。</li>
+              <li>商业目标：涨粉、种草、私域引流、课程/服务转化、品牌曝光或招商。</li>
+            </ul>
+          </div>
+          <div class="panel">
+            <h2>主要风险</h2>
+            <ul class="plain-list">
+              <li>定位过宽：导致算法标签不清晰，冷启动效率低。</li>
+              <li>AI 痕迹过重：文案模板化、视觉不自然，会降低收藏和信任。</li>
+              <li>参考过度：对标账号拆解可以借鉴结构，但不能照搬标题、图片和表达。</li>
+              <li>反馈滞后：只生产不复盘，会让策略学习模块失效。</li>
+            </ul>
+          </div>
+          <div class="panel">
+            <h2>运营护栏</h2>
+            <ul class="plain-list">
+              <li>所有笔记发布前必须做“人设一致、表达自然、平台合规、重复度”四项检查。</li>
+              <li>每周至少做一次数据复盘，记录高收藏、高点击、高评论和低表现内容的原因。</li>
+              <li>每 15 条笔记更新一次选题库、标题模板库、视觉参考库和禁用表达清单。</li>
+              <li>发布内容避免医疗、金融、夸大效果、虚假经历、搬运素材和未授权图片。</li>
+            </ul>
+          </div>
+          <div class="panel">
+            <h2>备注区</h2>
+            <div class="note-box">
+              <strong>当前项目备注已固化到任务卡片与流程文档。</strong>
+              <small>后续新增决策优先写入对应任务的 embedded 内容，或同步到 Database/fixed_process.md，避免浏览器本地备注丢失。</small>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const tasks = [
+      { id: "w1-01", week: "W1", module: "定位", priority: "P0", title: "确定 IP 赛道与商业目标", desc: "从小红书适配性、个人资源、变现路径、内容可持续性四个角度确定唯一主赛道。", deliverable: "赛道选择表 + 商业目标一句话", embedded: [
+        { title: "当前任务进度", items: ["已完成。"] },
+        { title: "小红书适配性：较高", items: [
+          "Q 版 2D 虚拟人物很适合小红书，天然具备轻内容、强人设、可收藏、可评论点梗的属性。",
+          "小红书用户对生活感、情绪价值、可爱视觉和人格化表达接受度高。",
+          "相比单纯发插画，做成评论区共创角色更容易形成互动。"
+        ] },
+        { title: "个人资源：中等偏高要求", items: [
+          "至少需要准备 1 个主形象、8-12 个基础表情、10-20 个常用动作姿势、3-5 个固定场景、10 个互动模板，以及 1 套固定口吻和回复规则。",
+          "由于当前不具备手绘能力，应避免每条内容都重新生成角色，否则画风容易漂移。",
+          "更好的做法是先制作纸片人资产包：固定脸、固定比例、固定线条、固定色板，再通过表情、动作和对白变化承接内容。"
+        ] },
+        { title: "主要压力", items: [
+          "美术一致性：Q 版角色不能每条脸都变化。",
+          "评论运营：互动 IP 需要高频回复，否则人设会断裂。",
+          "剧情维护：角色需要长期记忆，不能今天社恐、明天毒舌、后天又完全治愈，导致不像同一个人。"
+        ] },
+        { title: "变现路径", items: [
+          "暂不考虑。"
+        ] },
+        { title: "内容可持续性：高，但必须机制化", items: [
+          "评论区本身可以成为选题库，只要设计好机制，内容不会很快枯竭。",
+          "长期栏目 1：评论区点梗。粉丝留言，角色回应。",
+          "长期栏目 2：今天被人类问倒了。角色回答离谱问题。",
+          "长期栏目 3：粉丝决定我的一天。通过投票决定角色行为。",
+          "长期栏目 4：小红书观察日记。角色吐槽或观察人类生活。",
+          "长期栏目 5：角色成长线。每周推进一点世界观或关系线。",
+          "风险在于内容重复，例如长期只做翻牌评论会造成用户疲劳，因此需要一条主线：这个 Q 版角色为什么在小红书、它想完成什么任务、它和粉丝是什么关系。"
+        ] }
+      ] },
+      { id: "w1-02", week: "W1", module: "用户研究", priority: "P0", title: "定义目标用户画像", desc: "明确核心用户的年龄、城市、消费能力、情绪痛点、搜索关键词、收藏动机和关注触发点。", deliverable: "3 个用户画像 + 痛点清单", embedded: [
+        { title: "当前任务进度", items: ["已完成。"] },
+        { title: "目标用户总结", items: [
+          "核心用户以 18-28 岁女性为主，喜欢可爱治愈内容，愿意评论互动，也愿意把角色当作头像、电子陪伴或生活搭子。"
+        ] },
+        { title: "用户画像 1：学生党治愈型用户", items: [
+          "年龄：16-22 岁；城市：二三线城市、新一线大学城；消费能力：月可支配 300-1500 元。",
+          "情绪痛点：考试压力、孤独、想被鼓励、想要可爱头像。",
+          "搜索关键词：可爱头像、治愈头像、考试加油、原创 IP、Q 版头像、可爱壁纸。",
+          "收藏动机：收藏头像、壁纸、情绪安慰图、考试鼓励图。",
+          "关注触发点：角色回复“加油宝宝”、评论区翻牌、能用作头像、画风软萌。"
+        ] },
+        { title: "用户画像 2：年轻打工人陪伴型用户", items: [
+          "年龄：22-28 岁；城市：一线、新一线、强二线；消费能力：月可支配 2000-6000 元。",
+          "情绪痛点：上班疲惫、情绪低落、社交压力、想获得电子陪伴。",
+          "搜索关键词：打工人治愈、情绪价值、可爱插画、生活碎片、电子宠物、互动 IP。",
+          "收藏动机：收藏治愈语录、生活感图片、可转发给朋友的可爱内容。",
+          "关注触发点：角色像朋友一样回应，能把普通生活照片变可爱，有稳定人设。"
+        ] },
+        { title: "痛点清单", items: [
+          "想要可爱头像/壁纸，但找不到有辨识度、不是网图感的原创角色。",
+          "情绪压力大，希望被轻轻回应，而不是看大道理。",
+          "评论后希望被作者看见、被翻牌、被角色回应。",
+          "喜欢可爱 IP，但不想只看静态插画，希望角色“活起来”。",
+          "想把自己的生活照片、宠物、日常小事变成有趣内容。",
+          "喜欢收藏表情包、头像、壁纸，但需要持续更新。",
+          "对 AI 味、模板感、画风漂移敏感，容易因此失去信任。",
+          "想参与角色成长，比如给角色起名、选衣服、选剧情、投稿互动。"
+        ] }
+      ] },
+      { id: "w1-03", week: "W1", module: "竞品研究", priority: "P0", title: "建立对标账号库", desc: "筛选同赛道账号，记录粉丝量、爆款笔记、标题结构、封面形式、评论区高频需求。", deliverable: "对标账号表", embedded: [
+        { title: "当前任务进度", items: ["已完成。我已基于“同赛道成功案例”文件夹中的截图，整理出第一版对标账号库。"] },
+        { title: "我筛选出的对标账号", items: [
+          "比比和芙芙：35.6 万粉丝，365.2 万获赞与收藏。成熟双角色原创 IP，强剧情、强世界观、粉色视觉统一，适合作为头部样板。",
+          "角闪石族族长：11.7 万粉丝，44.7 万获赞与收藏。原创插画 IP，已有品牌联名和礼盒展示，适合作为商业化参考。",
+          "蒜皮宝宝：6.5 万粉丝，46.1 万获赞与收藏。小鸟拟人 IP，表情包、短动画和搞笑反差明显，适合参考高频内容和角色动作。",
+          "Bambina：1.2 万粉丝，4.3 万获赞与收藏。治愈系白发 Q 版角色，头像、壁纸、情绪陪伴属性强，适合作为收藏型内容参考。",
+          "我叫 Pip：4079 粉丝，1.3 万获赞与收藏。小精灵角色，核心玩法是评论区互动、粉丝投稿和生活照片二创，最接近我的方向。",
+          "茄可佬：6376 粉丝，2.7 万获赞与收藏。番茄拟人 IP，主打画粉丝 ID、微信素材和搞怪互动，适合参考低成本互动机制。"
+        ] },
+        { title: "我总结的标题与封面规律", items: [
+          "标题结构主要包括：新 IP 首发、互动征集、角色口吻、生活场景、剧情短句、头像/壁纸/表情包分享、粉丝定制。",
+          "封面形式主要包括：角色大图、双角色同框、现实照片叠加 2D 角色、表情包举牌、头像九宫格、壁纸模板、漫画分镜。"
+        ] },
+        { title: "我记录到的评论区高频需求", items: [
+          "用户反复表达的需求是：求头像、求壁纸、求表情包、求被画、求翻牌、求角色陪伴、求周边、求更新剧情。",
+          "对我的账号最有价值的方向是：评论区翻牌、头像/壁纸分享、角色进入粉丝生活照片、角色生活小剧场。"
+        ] },
+        { title: "我的结论", items: [
+          "我后续最应该重点参考“我叫 Pip + Bambina + 茄可佬”：前者提供互动玩法，Bambina 提供治愈收藏感，茄可佬提供低成本粉丝参与机制。",
+          "我的账号可以收窄为：一个会进入粉丝评论、头像和生活照片里的 Q 版 2D 小角色。"
+        ] }
+      ] },
+      { id: "w1-04", week: "W1", module: "竞品研究", priority: "P0", title: "拆解参考 IP 的走红原因", desc: "分析形象、人格、故事线、视觉记忆点、互动钩子和可复用但不照搬的结构。", deliverable: "参考 IP 拆解报告", embedded: [
+        { title: "当前任务进度", items: ["已完成。"] },
+        { title: "交付物", items: ["Week1/参考IP拆解报告.docx"] },
+        { title: "已拆解方向", items: [
+          "围绕 Bambina、我叫 Pip、茄可佬、比比和芙芙、蒜皮宝宝、角闪石族族长等参考 IP，拆解形象、人设、视觉记忆点、互动机制和内容结构。",
+          "沉淀可复用但不照搬的结构：头像/壁纸素材、评论区共创、角色小剧场、情绪陪伴短句、粉丝投稿和名字小画。",
+          "明确后续蓝汐应重点学习“治愈收藏感 + 粉丝被看见 + 轻故事线推进”，不复制角色外观、原文案和具体构图。"
+        ] }
+      ] },
+      { id: "w1-05", week: "W1", module: "风控", priority: "P0", title: "输出合规与禁用清单", desc: "列出赛道敏感词、不能承诺的效果、不能虚构的经历、不能使用的视觉素材类型。", deliverable: "合规检查表", embedded: [
+        { title: "当前任务进度", items: ["已完成。"] },
+        { title: "交付物", items: ["Week1/合规检查表(已优化成skill名为publish-guard).docx"] },
+        { title: "合规边界", items: [
+          "发布前需要检查人设一致性、表达自然度、平台合规、重复度和视觉素材来源。",
+          "禁用方向包括：攻击真实个体、制造外貌焦虑、虚假承诺、医疗金融建议、暴力血腥、高争议议题、未经授权的角色/素材复刻。",
+          "蓝汐表达只提供轻陪伴和情绪安放，不包装成能解决现实困境的角色。"
+        ] }
+      ] },
+
+      { id: "w2-01", week: "W2", module: "IP设计", priority: "P0", title: "完成 IP 人物档案", desc: "包含昵称、简介、身份、性格、价值观、口头禅、表达边界、内容禁区和长期使命。", deliverable: "IP 档案 v1", embedded: [
+        { title: "当前任务进度", items: ["已完成。"] },
+        { title: "交付物", items: ["蓝汐/蓝汐角色档案.md", "蓝汐/蓝汐-Q版.png", "蓝汐/蓝汐-Q版-角色参照图.png"] },
+        { title: "核心设定", items: [
+          "角色名称：蓝汐；昵称：蓝汐、汐汐。",
+          "身份：原创陪伴型插画 IP，用于头像、壁纸、to 签、表情包和粉丝互动内容。",
+          "性格：温柔、安静、略笨拙、慢热、轻微发呆、重视陪伴。",
+          "价值观：慢一点也没关系；每个名字、相遇与小情绪都值得被记住；笨拙的自己也可以被喜欢。",
+          "口头禅：我在呢、慢一点也没关系、嘿嘿、今天也要软软的、给你留了一个位置。"
+        ] },
+        { title: "视觉锁定", items: [
+          "已完成 Q 版主参考图和多视角角色参照图，后续生图必须同时参考。",
+          "已写入身份锁定提示词、允许变化项、禁止变化项和动态镜头张力规则。",
+          "视觉基准包括：黑色长发、蓝色眼睛/眉毛/睫毛、发梢限定蓝色挑染、白色无袖连衣裙、光脚、低饱和手绘水彩/粉蜡笔质感。"
+        ] }
+      ] },
+      { id: "w2-02", week: "W2", module: "IP设计", priority: "P0", title: "设计人物关系与世界观", desc: "定义 IP 的背景、关系网络、常驻场景、行为逻辑、冲突来源和成长路径。", deliverable: "世界观与关系设定", embedded: [
+        { title: "当前任务进度", items: ["已完成，已并入蓝汐角色档案。"] },
+        { title: "背景与世界观", items: [
+          "蓝汐不设宏大世界观，而是像从白色画纸、柔和铅笔线和一点发梢蓝光中慢慢长出来。",
+          "她生活在日常与画纸之间，背景可随情绪和故事切换为窗边雨幕、柔软房间、夜间桌灯、雾中走廊、浅水倒影、云层或远处城市剪影。",
+          "背景不是固定空白底，而是服务故事的低饱和日常舞台。"
+        ] },
+        { title: "关系网络与成长路径", items: [
+          "关系网络：评论区与私信中的朋友、被画进作品的 ID、领取 to 签的人、一起共创头像和表情包的人。",
+          "行为逻辑：收到名字、留言、心情或小愿望后，用小画、头像、壁纸、to 签或短句回应。",
+          "冲突来源：想安慰别人却不知道怎么说；想记住所有人却担心遗漏；因为慢和笨拙而不好意思出现。",
+          "成长路径：从一张安静头像开始，逐渐发展出壁纸、to 签、节日福利、表情包和粉丝共创。"
+        ] }
+      ] },
+      { id: "w2-03", week: "W2", module: "IP设计", priority: "P0", title: "设计 30 天故事线", desc: "按近 3 天、近 7 天、近 15 天、近 30 天拆出阶段任务，让内容有追更感。", deliverable: "30 天故事线表", embedded: [
+        { title: "当前任务进度", items: ["已完成。"] },
+        { title: "交付物", items: ["蓝汐/蓝汐-30天故事线表.md"] },
+        { title: "核心结果", items: [
+          "已将蓝汐首月冷启动拆成 5 个阶段：第一次被看见、靠近小世界、建立互动与共创、形成栏目与连续追更、小世界扩容与复盘。",
+          "已完成 D1-D30 每日故事线，包含叙事节点、内容形式、画面方向、文案核心、互动钩子和栏目雏形。",
+          "故事线最终沉淀出 6 个可长期运营栏目：蓝汐日记、一句软话、名字小画、头像领取、蓝汐小表情、场景故事。"
+        ] }
+      ] },
+      { id: "w2-05", week: "W2", module: "内容策略", priority: "P0", title: "建立栏目矩阵", desc: "设计 4-6 个固定栏目，例如人设日常、干货收藏、情绪共鸣、场景故事、互动问答。", deliverable: "栏目矩阵", embedded: [
+        { title: "当前任务进度", items: ["已完成。"] },
+        { title: "交付物", items: ["蓝汐/蓝汐-栏目矩阵.md"] },
+        { title: "栏目矩阵", items: [
+          "主栏目：蓝汐日记、一句软话、名字小画、头像领取。",
+          "辅助栏目：蓝汐小表情、场景故事。",
+          "已为每个栏目定义定位、用户需求、内容形式、典型选题、画面规范、文案语气、互动方式和禁忌。"
+        ] },
+        { title: "首轮测试重点", items: [
+          "优先测试头像领取，验证视觉资产的收藏和使用价值。",
+          "优先测试名字小画，验证粉丝评论、共创和复访意愿。",
+          "优先测试一句软话，验证陪伴型表达是否能带来收藏。"
+        ] }
+      ] },
+
+      { id: "w3-01", week: "W3", module: "数据采集", priority: "P0", title: "收集高表现小红书样本", desc: "围绕我们的 IP 方向，先收 30-50 条样本试跑，再扩展到 150 条左右。重点收真正值得学习的标题、正文、封面、标签和互动数据。", deliverable: "样本池 v1", embedded: [
+        { title: "当前任务进度", items: ["已完成。"] },
+        { title: "交付物", items: [
+          "Database/Datapool/data-pool/xhs_sample_pool_v1.csv",
+          "Database/Datapool/data-collection/1.json 至 7.json",
+          "Database/Datapool/data-images/ 本地封面图片"
+        ] },
+        { title: "样本池状态", items: [
+          "当前标准样本池共 490 条，review_status 全部为已确认。",
+          "保留 424 条，降权 66 条；低风险 458 条，中风险 32 条。",
+          "本地图片已下载并回填 local_image_path，当前 data-images 中有 490 个 webp 文件。"
+        ] }
+      ] },
+      { id: "w3-02", week: "W3", module: "数据标注", priority: "P0", title: "确定最小标注字段", desc: "先定清楚每条样本必须记录什么，例如主题、场景、情绪、标题结构、封面类型、互动钩子、合规风险和是否适合复用。", deliverable: "最小标注字段清单", embedded: [
+        { title: "当前任务进度", items: ["已完成。"] },
+        { title: "核心字段", items: [
+          "原始字段：id、note_id、url、title、content、author_id、author_name、likes、comments、collects、tags、images、scraped_at、media_type、push_time。",
+          "本地字段：local_image_path，用于关联本地封面图片。",
+          "人工标注字段：topic、scene、emotion、hook、reusable_structure、risk_level、keep_status、notes、review_status。"
+        ] },
+        { title: "字段原则", items: [
+          "notes 只保留“依据：……”内容，不写已确认、预标注、待人工审核、可借鉴、注意等流程性文字。",
+          "review_status 单独记录审核状态，当前 490 条均已确认。"
+        ] }
+      ] },
+      { id: "w3-03", week: "W3", module: "数据标注", priority: "P0", title: "制定简单可执行的标注规则", desc: "把每个字段的含义和可选值写清楚，避免每次凭感觉标注。比如情绪有哪些类型、封面类型怎么分、风险等级怎么判断。", deliverable: "样本标注规范 v1", embedded: [
+        { title: "当前任务进度", items: ["已完成。"] },
+        { title: "交付物", items: ["Database/Datapool/data-pool/xhs_sample_annotation_guideline_v1.md"] },
+        { title: "标注规范内容", items: [
+          "已定义 topic、scene、emotion、hook、reusable_structure、risk_level、keep_status、notes、review_status 的含义和可选值。",
+          "已明确多选项使用英文分号分隔，主题/场景/情绪/钩子优先选最主要的 1-2 项。",
+          "已区分 risk_level 与 keep_status：前者评价发布风险，后者评价是否值得作为蓝汐参考。"
+        ] }
+      ] },
+      { id: "w3-04", week: "W3", module: "内容策略", priority: "P1", title: "给样本建立评分规则", desc: "不是所有样本都同样重要。按 IP 贴合度、爆款潜力、结构可复用度、视觉适配度和风险程度，为样本打分。", deliverable: "样本评分表", embedded: [
+        { title: "当前任务进度", items: ["已完成第一版，已落在标注字段和特征工程中。"] },
+        { title: "当前评分/分层方式", items: [
+          "keep_status 用于保留、降权、剔除判断，当前保留 424 条、降权 66 条。",
+          "risk_level 用于低/中/高风险判断，当前低风险 458 条、中风险 32 条。",
+          "feature_pipeline.py 已生成 engagement_score 和 engagement_level，用点赞、评论、收藏综合衡量互动表现。"
+        ] },
+        { title: "互动分公式", items: [
+          "raw_score = likes + comments * 3 + collects * 2。",
+          "engagement_score = log1p(raw_score)。",
+          "engagement_level 按当前样本池 33%/66% 分位数切成低互动、中互动、高互动。"
+        ] }
+      ] },
+      { id: "w3-05", week: "W3", module: "数据质量", priority: "P1", title: "定义样本保留和剔除标准", desc: "明确哪些样本可以保留，哪些需要剔除或降权。例如疑似搬运、标题党、争议内容、图片不可用、和 IP 方向不匹配。", deliverable: "样本质量门槛", embedded: [
+        { title: "当前任务进度", items: ["已完成。"] },
+        { title: "保留标准", items: [
+          "与蓝汐的安静、温柔、陪伴、头像/壁纸、粉丝共创方向匹配。",
+          "可借鉴内容结构、互动方式、情绪入口或视觉组织方式。",
+          "图片可用、信息完整、风险较低。"
+        ] },
+        { title: "降权/剔除标准", items: [
+          "降权：有局部可借鉴点，但整体气质不够适合蓝汐，例如过度商业、强热点依赖、高能量搞怪或低落情绪过重。",
+          "剔除：风险高、信息质量差、图片不可用、明显不相关或无法作为原创参考。",
+          "清洗 notebook 已支持删除 keep_status 为剔除的样本。"
+        ] }
+      ] },
+
+      { id: "w4-01", week: "W4", module: "数据库", priority: "P0", title: "设计承接 W3 的核心数据表", desc: "围绕 W3 的样本和标签，先设计能用的核心表，包括原始笔记、账号信息、样本标注、样本评分、质量检查和 IP 配置。", deliverable: "核心表结构草案", embedded: [
+        { title: "当前任务进度", items: ["已完成。"] },
+        { title: "核心表", items: [
+          "xhs_samples：主样本表，承接小红书笔记原始字段、本地图片路径和人工标注字段。",
+          "xhs_text_features：文本特征表，按 sample_id 外键关联 xhs_samples.id。",
+          "图片文件不直接存进 MySQL，数据库只保存 local_image_path。"
+        ] },
+        { title: "交付物", items: [
+          "Database/init_mysql.sql",
+          "Database/import_xhs_samples.py",
+          "Database/import_xhs_features.py"
+        ] }
+      ] },
+      { id: "w4-02", week: "W4", module: "数据库", priority: "P0", title: "编写字段字典", desc: "把每个字段是什么意思写清楚，例如 topic 是主题、emotion 是情绪、risk_level 是风险等级，避免后面数据越多越混乱。", deliverable: "字段字典 v1", embedded: [
+        { title: "当前任务进度", items: ["已完成。"] },
+        { title: "交付物", items: ["Database/Datapool/data-pool/xhs_sample_pool_v1_dictionary.csv"] },
+        { title: "字段覆盖", items: [
+          "已记录原始采集字段含义：note_id、url、title、content、author_id、author_name、likes、comments、collects、tags、images、scraped_at、push_time 等。",
+          "已记录人工标注字段含义：topic、scene、emotion、hook、reusable_structure、risk_level、keep_status、notes、review_status。",
+          "当前 CSV 表头与导入脚本字段保持一致。"
+        ] }
+      ] },
+      { id: "w4-03", week: "W4", module: "数据库", priority: "P0", title: "建立本地开发数据库", desc: "先搭一个本地可用的数据库，把 W3 收集和标注出来的样本真正存进去，为后续清洗、分析和生成内容做准备。", deliverable: "本地数据库 + 初始化脚本", embedded: [
+        { title: "当前任务进度", items: ["已完成。"] },
+        { title: "MySQL 状态", items: [
+          "数据库：xhs_ip_lab。",
+          "样本表：xhs_samples，当前 490 行。",
+          "特征表：xhs_text_features，当前 490 行。",
+          "MySQL 用户：xhs_user；当前本地密码：本地自定，不入库。"
+        ] },
+        { title: "交付物", items: [
+          "Database/init_mysql.sql",
+          "Database/USER.sql",
+          "Database/import_xhs_samples.py",
+          "Database/import_xhs_features.py",
+          "Database/README.md"
+        ] }
+      ] },
+      { id: "w4-04", week: "W4", module: "数据库", priority: "P0", title: "保留原始数据和扩展字段", desc: "数据库早期不要一次性写死。原始笔记保留 raw JSON，标注字段支持版本和扩展，方便 W3 标注规则调整。", deliverable: "可扩展数据结构", embedded: [
+        { title: "当前任务进度", items: ["已完成第一版。"] },
+        { title: "原始数据保留", items: [
+          "Easy Scraper 原始 JSON 保存在 Database/Datapool/data-collection，当前包含 1.json 至 7.json。",
+          "标准样本池保存在 Database/Datapool/data-pool/xhs_sample_pool_v1.csv。",
+          "图片实体保存在 Database/Datapool/data-images，数据库和 CSV 通过 local_image_path 关联。"
+        ] },
+        { title: "扩展方式", items: [
+          "样本表保留原始字段和人工标注字段，后续可继续扩展标注字段。",
+          "特征工程不直接覆盖样本表，而是写入独立的 xhs_text_features 表。",
+          "流程文档固定为 Database/fixed_process.md，后续新增脚本需要同步写入。"
+        ] }
+      ] },
+      { id: "w4-05", week: "W4", module: "数据采集", priority: "P0", title: "实现样本采集落库流程", desc: "把收集到的小红书笔记、图片链接、互动数据、账号信息和人工标注结果，通过固定流程写入数据库。", deliverable: "采集落库流程", embedded: [
+        { title: "当前任务进度", items: ["已完成并固化。"] },
+        { title: "固定流程", items: [
+          "Easy Scraper 导出与 6.json 字段一致的 JSON，放入 data-collection。",
+          "运行 append_raw_to_pool.py，把新 JSON 追加进 xhs_sample_pool_v1.csv，并按 note_id/url 去重。",
+          "运行 xhs_data_processing.ipynb 做清洗和 push_time 规范化。",
+          "运行 download_images.py 下载封面并回填 local_image_path。",
+          "完成人工标注和审核后，运行 validate_sample_pool.py，再运行 import_xhs_samples.py 导入 MySQL。"
+        ] },
+        { title: "交付物", items: [
+          "Database/fixed_process.md",
+          "Database/pipeline/append_raw_to_pool.py",
+          "Database/pipeline/download_images.py",
+          "Database/pipeline/xhs_data_processing.ipynb",
+          "Database/pipeline/validate_sample_pool.py"
+        ] }
+      ] },
+      { id: "w4-06", week: "W4", module: "数据质量", priority: "P1", title: "建立数据质量检查", desc: "检查是否有重复样本、字段缺失、链接失效、互动数据异常、标签没填、采集时间异常等问题。", deliverable: "数据质量检查清单", embedded: [
+        { title: "当前任务进度", items: ["已完成第一版。"] },
+        { title: "已覆盖检查", items: [
+          "重复样本：检查 id、note_id、去参数后的 url。",
+          "字段缺失：检查必要字段、images、local_image_path 和必填标注字段。",
+          "本地图片：检查 local_image_path 指向的图片文件是否存在。",
+          "互动数据：检查 id、likes、comments、collects 是否为整数。",
+          "审核状态：支持 --require-confirmed，当前 490 条均为已确认。"
+        ] },
+        { title: "交付物", items: [
+          "Database/pipeline/validate_sample_pool.py",
+          "Database/fixed_process.md 第 7 节入库前质量检查"
+        ] }
+      ] },
+
+      { id: "w5-01", week: "W5", module: "数据处理", priority: "P0", title: "实现原始数据清洗代码", desc: "清洗标题、正文、标签、时间、互动数据，统一字符、空值、重复内容和平台字段格式。", deliverable: "clean_notes 脚本", embedded: [
+        { title: "当前任务进度", items: ["已完成第一版。"] },
+        { title: "交付物", items: ["Database/pipeline/xhs_data_processing.ipynb"] },
+        { title: "已实现清洗逻辑", items: [
+          "自动定位 xhs_sample_pool_v1.csv。",
+          "删除 images 为空的样本，删除 keep_status 为剔除的样本。",
+          "删除旧列 videos、author_avatar、cover_type、shares。",
+          "从 content 中抽取 #标签并合并到 tags，再从正文中移除标签。",
+          "换行替换为两个空格，删除原创 IP 禁抄袭/禁二改等说明文本；正文全是标签时置为空。",
+          "push_time 统一为 YYYY/MM/DD；删除“编辑于”和浙江、福建等 IP 属地；按 2026-06-18 处理昨天、4天前等相对日期。"
+        ] },
+        { title: "已确认的清洗边界", items: [
+          "不再删除 emoji、表情符号或颜文字。",
+          "title 只做首尾空白和基础空格规范化。"
+        ] }
+      ] },
+      { id: "w5-02", week: "W5", module: "数据处理", priority: "P0", title: "实现多模态描述字段处理", desc: "为图片/视频预留 image_desc、video_desc、cover_desc 等字段，并支持人工或模型描述写入。", deliverable: "多模态描述处理流程" },
+      { id: "w5-03", week: "W5", module: "特征工程", priority: "P0", title: "实现文本特征工程", desc: "抽取主题、情绪、场景、痛点、内容结构、标题模板、互动钩子和平台关键词。", deliverable: "feature_pipeline 脚本", embedded: [
+        { title: "当前任务进度", items: ["已完成 v1.0，并已导入 MySQL。"] },
+        { title: "交付物", items: [
+          "Database/pipeline/feature_pipeline.py",
+          "Database/Datapool/features/xhs_text_features_v1.csv",
+          "Database/import_xhs_features.py",
+          "MySQL 表：xhs_ip_lab.xhs_text_features",
+          "Database/query/ 下 8 个分析 SQL 文件"
+        ] },
+        { title: "特征字段", items: [
+          "已生成 sample_id、note_id、url、title、topic、scene、emotion、pain_point、content_structure、title_template、title_length_bucket、hook、platform_keywords、likes、comments、collects、engagement_score、keep_status、risk_level、review_status、push_time、engagement_level。",
+          "pain_point 使用 Python 规则和词典抽取，当前包括孤独陪伴、自我治愈、关系依赖、成长迷茫、低能量疲惫、情绪宣泄、被看见需求、素材需求、节日仪式感。",
+          "title_template 包括提问型、愿望表达型、时间节点型、素材领取型、关系陪伴型、情绪共鸣型、自我鼓励型、短句氛围型、英文短句型、叙述型和无标题。"
+        ] },
+        { title: "当前数据结果", items: [
+          "xhs_text_features_v1.csv 共 490 行，xhs_text_features 表共 490 行。",
+          "互动分层：高互动 167 条，中互动 161 条，低互动 162 条。",
+          "标题模板 Top：短句氛围型标题 191 条，叙述型标题 138 条，关系陪伴型标题 37 条，提问型标题 37 条，素材领取型标题 25 条。"
+        ] }
+      ] },
+      { id: "w6-01", week: "W6", module: "特征工程", priority: "P0", title: "实现 IP 特征融合", desc: "把 IP 人设、栏目、故事线、样本标签融合成可用于选题生成和内容生产的标准输入文本。", deliverable: "IP 特征融合脚本" },
+      { id: "w6-02", week: "W6", module: "数据处理", priority: "P1", title: "生成特征化数据集", desc: "把清洗、特征、文本融合结果写入特征表，形成内容生成、人工筛选和后续复盘的标准输入。", deliverable: "特征化数据表", embedded: [
+        { title: "当前任务进度", items: ["已完成第一版。"] },
+        { title: "交付物", items: [
+          "Database/Datapool/features/xhs_text_features_v1.csv",
+          "MySQL 表：xhs_ip_lab.xhs_text_features"
+        ] },
+        { title: "用途", items: [
+          "把样本池从“已标注数据”升级成“可分析、可筛选、可 SQL 查询的特征化数据集”。",
+          "后续可以直接查询高互动标题模板、高收藏内容结构、痛点分布、平台关键词和低互动弱结构。",
+          "当前特征表与 xhs_samples 通过 sample_id 外键关联，orphan_features 为 0。"
+        ] }
+      ] },
+      { id: "w6-03", week: "W6", module: "内容生成", priority: "P0", title: "搭建选题生成流程", desc: "用 IP 档案、热门样本、对标账号、故事线和特征化数据生成候选选题池。", deliverable: "选题生成流程" },
+      { id: "w6-04", week: "W6", module: "评估筛选", priority: "P0", title: "建立发布前四项检查", desc: "每条内容必须检查人设一致性、表达自然度、合规风险、重复度。", deliverable: "发布前检查表" },
+
+      { id: "w7-01", week: "W7", module: "内容生成", priority: "P0", title: "编写文案生成提示词", desc: "覆盖标题、正文、摘要、评论引导、标签，强调小红书短句、生活感和自然表达。", deliverable: "文案 Prompt v1" },
+      { id: "w7-02", week: "W7", module: "视觉", priority: "P0", title: "编写配图提示词模板", desc: "把人物/场景/物品/光线/构图/禁用项结构化，避免 AI 痕迹、乱码、违和光影。", deliverable: "配图 Prompt v1" },
+      { id: "w7-03", week: "W7", module: "内容生成", priority: "P1", title: "生成首批 30 条候选内容", desc: "每个栏目至少 5 条，保留标题、正文、封面方向、标签、发布时间建议和选题来源。", deliverable: "30 条候选内容" },
+      { id: "w7-04", week: "W7", module: "内容确认", priority: "P0", title: "精修 12 条可发布内容", desc: "从候选内容中筛出 12 条，逐条做人工润色、视觉统一和发布前检查。", deliverable: "12 条精修内容" },
+
+      { id: "w8-01", week: "W8", module: "内容分发", priority: "P0", title: "完成账号基础装修与发布日历", desc: "设置头像、昵称、简介、背景、置顶策略，并安排首月发布时间、栏目、标题、封面和复盘节点。", deliverable: "账号装修 + 发布日历" },
+      { id: "w8-02", week: "W8", module: "内容分发", priority: "P0", title: "启动第一轮发布验证", desc: "发布第一批内容，建议 6-8 条，记录曝光、阅读、点赞、收藏、评论、关注和发布时间。", deliverable: "第一轮发布记录" },
+      { id: "w8-03", week: "W8", module: "数据监测", priority: "P0", title: "建立发布反馈回流表", desc: "把发布后的互动数据回写到数据库，关联内容 ID、栏目、选题来源和生成版本。", deliverable: "反馈回流表 + 录入流程" },
+      { id: "w8-04", week: "W8", module: "策略学习", priority: "P0", title: "完成压缩版增长复盘", desc: "把后期增长验证、爆款拆解、商业判断、总复盘缩略为一份集中报告。", deliverable: "增长复盘报告" },
+      { id: "w8-05", week: "W8", module: "商业验证", priority: "P1", title: "设计轻量转化路径", desc: "根据 IP 目标设计私信关键词、资料包、预约、社群或产品承接方式，不做重运营扩展。", deliverable: "转化路径草案" },
+      { id: "w8-06", week: "W8", module: "归档", priority: "P0", title: "归档项目资产与下一步计划", desc: "归档 IP 档案、数据库脚本、数据处理代码、提示词、样本库、发布数据和下一阶段任务。", deliverable: "项目资产包 + 下阶段计划" }
+    ];
+
+    const weeks = [
+      { week: "W1", title: "定位与竞品研究", goals: ["确定赛道、用户与商业目标", "建立对标账号库", "拆解参考 IP 与合规边界"] },
+      { week: "W2", title: "IP 设计深化", goals: ["完成人物档案、世界观与视觉规范", "设计 30 天故事线", "建立栏目矩阵"] },
+      { week: "W3", title: "样本池与标注体系", goals: ["收集高表现小红书样本", "确定标注字段和标注规则", "建立评分和质量门槛"] },
+      { week: "W4", title: "数据库与采集落库", goals: ["设计承接样本的核心数据表", "编写字段字典并建立本地数据库", "完成采集落库和质量检查"] },
+      { week: "W5", title: "数据清洗与基础特征", goals: ["完成原始数据清洗", "处理多模态描述字段", "完成文本特征工程"] },
+      { week: "W6", title: "特征融合与选题检查", goals: ["完成 IP 特征融合", "生成特征化数据集", "搭建选题生成与发布前检查流程"] },
+      { week: "W7", title: "内容生成与精修", goals: ["完成文案/配图提示词", "生成首批候选内容", "精修可发布内容"] },
+      { week: "W8", title: "压缩发布与复盘", goals: ["完成账号装修和第一轮发布", "建立反馈回流表", "压缩完成增长、复盘、商业验证"] }
+    ];
+
+    const stateKey = "xhs-ip-todolist-state-v1";
+    let state = JSON.parse(localStorage.getItem(stateKey) || "{}");
+
+    const els = {
+      taskList: document.getElementById("taskList"),
+      emptyState: document.getElementById("emptyState"),
+      searchInput: document.getElementById("searchInput"),
+      weekFilter: document.getElementById("weekFilter"),
+      moduleFilter: document.getElementById("moduleFilter"),
+      statusFilter: document.getElementById("statusFilter"),
+      clearFilterBtn: document.getElementById("clearFilterBtn"),
+      sideProgress: document.getElementById("sideProgress"),
+      sideProgressText: document.getElementById("sideProgressText"),
+      totalTasks: document.getElementById("totalTasks"),
+      doneTasks: document.getElementById("doneTasks"),
+      currentFocus: document.getElementById("currentFocus"),
+      weekGrid: document.getElementById("weekGrid"),
+      exportBtn: document.getElementById("exportBtn"),
+      resetBtn: document.getElementById("resetBtn")
+    };
+
+    function tagClass(value) {
+      if (value === "P0") return "red";
+      if (value === "P1") return "amber";
+      if (value === "定位" || value === "IP设计" || value === "用户研究" || value === "竞品研究") return "purple";
+      if (value === "内容分发" || value === "商业验证" || value === "归档") return "green";
+      if (value === "数据监测" || value === "数据采集" || value === "数据库" || value === "数据处理" || value === "特征工程" || value === "数据质量" || value === "数据标注") return "blue";
+      return "";
+    }
+
+    function saveState() {
+      localStorage.setItem(stateKey, JSON.stringify(state));
+    }
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // 固化规则：任务完成后，把进度和交付物规范化写入 task.embedded。
+    // 一旦存在 embedded，页面会隐藏该任务的文本框，直接展示嵌入内容。
+    function isEmbeddedTask(task) {
+      return Array.isArray(task.embedded) && task.embedded.length > 0;
+    }
+
+    function renderEmbeddedContent(task) {
+      if (!isEmbeddedTask(task)) return "";
+      return `
+        <div class="embedded-content">
+          ${task.embedded.map(block => `
+            <section class="embedded-block">
+              <h4>${escapeHtml(block.title)}</h4>
+              <ul>${(block.items || []).map(item => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
+            </section>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    function renderTaskFields(task, record) {
+      if (isEmbeddedTask(task)) return renderEmbeddedContent(task);
+      if (!record.progress && !record.artifact) return "";
+      return `
+        <div class="embedded-content">
+          ${record.progress ? `<section class="embedded-block"><h4>当前任务进度</h4><ul><li>${escapeHtml(record.progress)}</li></ul></section>` : ""}
+          ${record.artifact ? `<section class="embedded-block"><h4>交付物记录</h4><ul><li>${escapeHtml(record.artifact)}</li></ul></section>` : ""}
+        </div>
+      `;
+    }
+
+    function getTaskRecord(id) {
+      const value = state[id];
+      const task = tasks.find(item => item.id === id);
+      const embeddedDone = Boolean(task && isEmbeddedTask(task));
+      if (value && typeof value === "object") {
+        return {
+          done: Boolean(value.done) || embeddedDone,
+          progress: value.progress || "",
+          artifact: value.artifact || ""
+        };
+      }
+      return { done: Boolean(value) || embeddedDone, progress: "", artifact: "" };
+    }
+
+    function updateTaskRecord(id, patch) {
+      const record = getTaskRecord(id);
+      state[id] = { ...record, ...patch };
+      if (!state[id].done && !state[id].progress && !state[id].artifact) {
+        delete state[id];
+      }
+      saveState();
+    }
+
+    function isDone(id) {
+      return getTaskRecord(id).done;
+    }
+
+    function populateFilters() {
+      const modules = [...new Set(tasks.map(task => task.module))];
+      weeks.forEach(item => {
+        const option = document.createElement("option");
+        option.value = item.week;
+        option.textContent = item.week + " " + item.title;
+        els.weekFilter.appendChild(option);
+      });
+      modules.forEach(module => {
+        const option = document.createElement("option");
+        option.value = module;
+        option.textContent = module;
+        els.moduleFilter.appendChild(option);
+      });
+    }
+
+    function renderTasks() {
+      const query = els.searchInput.value.trim().toLowerCase();
+      const week = els.weekFilter.value;
+      const module = els.moduleFilter.value;
+      const status = els.statusFilter.value;
+      const filtered = tasks.filter(task => {
+        const record = getTaskRecord(task.id);
+        const embeddedText = isEmbeddedTask(task)
+          ? task.embedded.flatMap(block => [block.title, ...(block.items || [])]).join(" ")
+          : "";
+        const haystack = [task.week, task.module, task.priority, task.title, task.desc, task.deliverable, record.progress, record.artifact, embeddedText].join(" ").toLowerCase();
+        if (query && !haystack.includes(query)) return false;
+        if (week !== "all" && task.week !== week) return false;
+        if (module !== "all" && task.module !== module) return false;
+        if (status === "done" && !isDone(task.id)) return false;
+        if (status === "todo" && isDone(task.id)) return false;
+        return true;
+      });
+
+      els.taskList.innerHTML = "";
+      filtered.forEach(task => {
+        const record = getTaskRecord(task.id);
+        const row = document.createElement("article");
+        row.className = "task" + (record.done ? " done" : "");
+        row.innerHTML = `
+          <input class="check" type="checkbox" ${record.done ? "checked" : ""} aria-label="完成 ${task.title}" />
+          <div>
+            <div class="task-title">${task.title}</div>
+            <div class="task-desc">${task.desc}</div>
+            <div class="task-meta">
+              <span class="tag blue">${task.week}</span>
+              <span class="tag ${tagClass(task.module)}">${task.module}</span>
+              <span class="tag ${tagClass(task.priority)}">${task.priority}</span>
+              ${isEmbeddedTask(task) ? '' : `<span class="tag">交付物：${task.deliverable}</span>`}
+            </div>
+            ${renderTaskFields(task, record)}
+          </div>
+          <div class="task-actions">
+            <button class="icon" title="只看同周任务" aria-label="只看 ${task.week}">
+              <svg class="icon-svg" viewBox="0 0 24 24"><path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/></svg>
+            </button>
+          </div>
+        `;
+        row.querySelector(".check").addEventListener("change", event => {
+          updateTaskRecord(task.id, { done: event.target.checked });
+          renderTasks();
+          renderProgress();
+          renderWeeks();
+        });
+        row.querySelectorAll("[data-field]").forEach(field => {
+          field.addEventListener("input", event => {
+            updateTaskRecord(task.id, { [event.target.dataset.field]: event.target.value });
+          });
+        });
+        row.querySelector(".task-actions button").addEventListener("click", () => {
+          els.weekFilter.value = task.week;
+          renderTasks();
+        });
+        els.taskList.appendChild(row);
+      });
+
+      els.emptyState.classList.toggle("hidden", filtered.length > 0);
+    }
+
+    function renderProgress() {
+      const done = tasks.filter(task => isDone(task.id)).length;
+      const total = tasks.length;
+      const pct = total ? Math.round(done / total * 100) : 0;
+      els.sideProgress.style.width = pct + "%";
+      els.sideProgressText.textContent = `${done} / ${total} 已完成，${pct}%`;
+      els.totalTasks.textContent = total;
+      els.doneTasks.textContent = done;
+      const firstOpen = tasks.find(task => !isDone(task.id));
+      els.currentFocus.textContent = firstOpen ? firstOpen.week : "完成";
+    }
+
+    function renderWeeks() {
+      els.weekGrid.innerHTML = "";
+      weeks.forEach(item => {
+        const weekTasks = tasks.filter(task => task.week === item.week);
+        const done = weekTasks.filter(task => isDone(task.id)).length;
+        const pct = weekTasks.length ? Math.round(done / weekTasks.length * 100) : 0;
+        const card = document.createElement("article");
+        card.className = "week-card";
+        card.innerHTML = `
+          <div class="tag-row">
+            <span class="tag blue">${item.week}</span>
+            <span class="tag green">${done}/${weekTasks.length}</span>
+          </div>
+          <h3>${item.title}</h3>
+          <div class="progress"><span style="width:${pct}%"></span></div>
+          <ul>${item.goals.map(goal => `<li>${goal}</li>`).join("")}</ul>
+          <button title="查看 ${item.week} 任务">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+            查看任务
+          </button>
+        `;
+        card.querySelector("button").addEventListener("click", () => {
+          switchView("tasks");
+          els.weekFilter.value = item.week;
+          renderTasks();
+        });
+        els.weekGrid.appendChild(card);
+      });
+    }
+
+    function switchView(view) {
+      document.querySelectorAll("[id^='view-']").forEach(section => section.classList.add("hidden"));
+      document.getElementById("view-" + view).classList.remove("hidden");
+      document.querySelectorAll(".nav button").forEach(button => {
+        button.classList.toggle("active", button.dataset.view === view);
+      });
+    }
+
+    function exportState() {
+      const completed = tasks.filter(task => isDone(task.id)).map(task => ({
+        id: task.id,
+        week: task.week,
+        module: task.module,
+        title: task.title,
+        deliverable: task.deliverable,
+        progress: getTaskRecord(task.id).progress,
+        artifact: getTaskRecord(task.id).artifact,
+        ...(isEmbeddedTask(task) ? { embedded: task.embedded } : {})
+      }));
+      const taskRecords = tasks.map(task => ({
+        id: task.id,
+        week: task.week,
+        module: task.module,
+        priority: task.priority,
+        title: task.title,
+        expectedDeliverable: task.deliverable,
+        ...getTaskRecord(task.id),
+        ...(isEmbeddedTask(task) ? { embedded: task.embedded } : {})
+      }));
+      const payload = {
+        exportedAt: new Date().toISOString(),
+        completedCount: completed.length,
+        totalCount: tasks.length,
+        completed,
+        taskRecords
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "xhs-ip-todolist-progress.json";
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+
+    document.querySelectorAll(".nav button").forEach(button => {
+      button.addEventListener("click", () => switchView(button.dataset.view));
+    });
+
+    [els.searchInput, els.weekFilter, els.moduleFilter, els.statusFilter].forEach(control => {
+      control.addEventListener("input", renderTasks);
+      control.addEventListener("change", renderTasks);
+    });
+
+    els.clearFilterBtn.addEventListener("click", () => {
+      els.searchInput.value = "";
+      els.weekFilter.value = "all";
+      els.moduleFilter.value = "all";
+      els.statusFilter.value = "all";
+      renderTasks();
+    });
+
+    els.exportBtn.addEventListener("click", exportState);
+    els.resetBtn.addEventListener("click", () => {
+      if (!confirm("确定清空所有勾选状态、任务进度和交付物记录？")) return;
+      state = {};
+      saveState();
+      renderTasks();
+      renderProgress();
+      renderWeeks();
+    });
+
+    populateFilters();
+    renderTasks();
+    renderProgress();
+    renderWeeks();
+  </script>
+</body>
+</html>
+

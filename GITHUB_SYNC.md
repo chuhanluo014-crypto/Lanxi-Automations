@@ -1,0 +1,96 @@
+# GitHub 同步流程
+
+本仓库用于同步蓝汐内容生产流程、原创资产、每日生成结果和必要的策略文档。不要把原始采集数据、平台链接 token、本地数据库密码、第三方 IP 截图直接推到 GitHub。
+
+## 入库范围
+
+建议入库：
+
+- `ContentPipeline/` 下的发布日历、候选选题、自动化脚本、每日生成 Markdown、待发布清单和蓝汐生成图。
+- `LanXi/` 下的蓝汐原创角色资产和角色档案。
+- `Database/` 下的脚本、SQL 初始化文件、查询文件、流程文档和脱敏模板。
+- `case-analysis/` 下的分析报告 Markdown。
+- `todolist.html` 等项目管理材料。
+
+默认忽略：
+
+- `Database/Datapool/data-collection/` 原始采集 JSON，里面有平台链接 token 和用户/评论上下文。
+- `Database/Datapool/data-images/` 下载的第三方样本图。
+- `Database/Datapool/data-pool/xhs_sample_pool_v1.csv` 和 `Database/Datapool/features/*.csv`，当前版本仍含平台链接 token。
+- `Database/USER.sql` 本地数据库用户密码文件；需要时从 `Database/USER.example.sql` 复制后本地修改。
+- `case-analysis/参考IP/` 下的第三方截图。
+- `.vscode/`、缓存、临时目录和环境变量文件。
+
+## 首次 GitHub 化
+
+在项目根目录执行：
+
+```powershell
+git init
+git status --short
+git add .
+git status --short
+git commit -m "chore: initialize LanXi content pipeline"
+git branch -M main
+git remote add origin <你的 GitHub 仓库地址>
+git push -u origin main
+```
+
+如果 GitHub 远程仓库已有内容，先不要直接 push，改用：
+
+```powershell
+git remote add origin <你的 GitHub 仓库地址>
+git fetch origin
+git status --short --branch
+```
+
+确认不会覆盖远程历史后再合并或新建分支。
+
+## 每日本地自动化后同步
+
+本地 Codex 自动化每天生成内容后，先检查：
+
+```powershell
+git status --short
+python -m py_compile ContentPipeline/automation/generate_daily_package.py
+```
+
+确认只包含当天应有变更，例如：
+
+- `ContentPipeline/publish_calendar_v1.csv`
+- `ContentPipeline/generated/pending_publish.md`
+- `ContentPipeline/generated/daily_packages/D*.md`
+- `ContentPipeline/generated/images/D*.png`
+
+直接提交到主分支：
+
+```powershell
+git add ContentPipeline
+git commit -m "content: add LanXi D5 daily package"
+git push
+```
+
+如果想走 PR：
+
+```powershell
+git switch -c content/lanxi-d5
+git add ContentPipeline
+git commit -m "content: add LanXi D5 daily package"
+git push -u origin content/lanxi-d5
+```
+
+然后在 GitHub 上创建 PR，审核 Markdown、图片和 `pending_publish.md` 后合并。
+
+## 新账号数据更新后同步
+
+新采集或新账号数据先在本地完成清洗、标注、入库和策略更新。同步 GitHub 时优先提交流程性产物和脱敏后的策略结果，不直接提交原始采集文件。
+
+建议检查：
+
+```powershell
+git status --short
+git diff --stat
+rg -n -i "xsec[_-]?token|password|secret|api[_-]?key|bearer|authorization|cookie" . --glob "!GITHUB_SYNC.md"
+```
+
+如果确实需要共享样本特征，先生成脱敏 CSV，再单独评估是否入库。
