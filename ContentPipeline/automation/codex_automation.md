@@ -82,7 +82,8 @@ ContentPipeline/generated/pending_publish.md
   - `ContentPipeline/generated/daily_packages/D*.md`
   - `ContentPipeline/generated/images/D*.png`
 - commit message 使用：`content: add LanXi <day> daily package`。
-- push 分支并创建 PR，目标分支为 `main`。
+- push 分支并创建 PR，目标分支为 `main`。优先使用 GitHub connector 创建 PR；如果本地安装并登录了 GitHub CLI，也可以用 `gh pr create`。
+- 如果 connector 和 `gh` 都不可用，至少 push 分支，并在结果里说明需要人工从该分支创建 PR。
 - PR 是人工审核发布前的检查口；不要自动合并。
 
 10. 停止，等待人工确认发布。

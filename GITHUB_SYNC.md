@@ -79,7 +79,13 @@ git commit -m "content: add LanXi D5 daily package"
 git push -u origin content/lanxi-d5
 ```
 
-然后在 GitHub 上创建 PR，审核 Markdown、图片和 `pending_publish.md` 后合并。
+然后创建 PR，审核 Markdown、图片和 `pending_publish.md` 后合并。Codex 自动化优先使用 GitHub connector 创建 PR；如果本地安装并登录了 GitHub CLI，也可以用：
+
+```powershell
+gh pr create --base main --head content/lanxi-d5 --title "content: add LanXi D5 daily package" --body "Daily LanXi D5 package for human review."
+```
+
+如果 connector 和 `gh` 都不可用，至少要把分支 push 到 GitHub，并在运行结果里给出可手动创建 PR 的分支名。
 
 ## 新账号数据更新后同步
 
