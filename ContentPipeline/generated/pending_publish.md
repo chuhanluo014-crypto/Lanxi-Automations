@@ -7,16 +7,16 @@
 - 发布前检查：初步通过 / 需人工终审
 - 状态：待人工发布
 
-## D2 蓝汐人设介绍
+## D2 蓝汐偷偷开心了一下
 
-- 内容包：ContentPipeline/generated/daily_packages/D2_CAL-D02_蓝汐人设介绍.md
+- 内容包：ContentPipeline/generated/daily_packages/D2_CAL-D02_蓝汐偷偷开心了一下.md
 - 图片：ContentPipeline/generated/images/D2_CAL-D02_lanxi-profile-closeup_v2.png
 - 发布前检查：初步通过 / 需人工终审
 - 状态：待人工发布
 
-## D3 蓝汐视觉细节拆解
+## D3 蓝汐在雨窗边碰到一颗雨滴
 
-- 内容包：ContentPipeline/generated/daily_packages/D3_CAL-D03_蓝汐视觉细节拆解.md
+- 内容包：ContentPipeline/generated/daily_packages/D3_CAL-D03_蓝汐在雨窗边碰到一颗雨滴.md
 - 图片：ContentPipeline/generated/images/D3_CAL-D03_lanxi-rain-window-paper_v2.png
 - 发布前检查：初步通过 / 需人工终审
 - 状态：待人工发布
